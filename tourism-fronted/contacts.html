@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacts</title>
+    <link rel="icon" href="Icons/Plane.png">
+    <link rel="stylesheet" href="contacts.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="nav-bar">
+        <div class="title">
+            <img src="Icons/Plane-green.png">
+            <h1>Dream Discover</h1>
+        </div>
+
+
+        <div class="menu">
+            <ul type="none">
+                <li><a href="homepage.html">Home</a></li>
+                <li><a href="booking/index.html">Booking</a></li>
+                <li><a href="aboutus.html">About Us</a></li>
+                <li><a href="contacts.html">Contact Us</a></li>
+                
+
+            </ul>
+            <div class=bell>
+                <img src="./Icons/bell.png" class="bells">
+                <div class="person">
+                    <img src="./Icons/security-user 1.png">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="forms">
+        <div class="body">
+
+            <div class="head">
+
+                <h1>Contact Us</h1>
+            </div>
+
+            <!-- Contact Form -->
+            <form id="contactForm">
+                <label for="name">First Name:</label>
+                <input type="text" id="name" name="firstName" required><br>
+                
+                <label for="name">Last Name:</label>
+                <input type="text" id="name" name="LastName" required><br>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br>
+
+                <label for="message">Message:</label><br>
+                <textarea id="message" name="message" rows="4" required></textarea><br>
+
+                <input type="submit" value="Send Message">
+            </form>
+
+        </div>
+        <div class="container">
+
+
+            <!-- Message List -->
+            <div class="head">
+                <h1>Sent Messages</h1>
+            </div>
+            
+
+
+           
+
+        </div>
+    </div>
+    <div class="footer">
+        <div class="foot1">
+            <div class="foot">
+                <img src="Icons/Plane-green.png">
+                <h4>Dream Discover</h4>
+            </div>
+            <p>Your next goto companion <br>for travel</p>
+            <p>&copy; Dream Discover 2023</p>
+
+        </div>
+
+        <div class="foot2">
+            <h4>Quick links</h4>
+            <ul type="none">
+                <li>About Us</li>
+                <li>Explore</li>
+                <li>Booking</li>
+                <li>Contact Us</li>
+            </ul>
+
+        </div>
+
+        <div class="foot3">
+            <h4>Countries</h4>
+            <ul type="none">
+                <li>Rwanda</li>
+                <li>Australia</li>
+                <li>Italy</li>
+                <li>Greece</li>
+                <li>Maldives</li>
+                <li>Switzeland</li>
+                <li><a href="#">See more</a></li>
+            </ul>
+
+        </div>
+
+        <div class="foot4">
+            <h4>Terms and Policies</h4>
+            <ul type="none">
+                <li>Privacy Policy</li>
+                <li>Terms of use</li>
+                <li>Accesibility</li>
+            </ul>
+
+        </div>
+
+        <div class="foot5">
+            <h4>Help</h4>
+            <ul type="none">
+                <li>Support</li>
+                <li>Cancel your bookings</li>
+                <li>Refund Policies</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+<script>
+    // Function to fetch all sent messages and render them in the container
+        function fetchSentMessages() {
+            fetch('https://localhost:5000/contact')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); //JSON data
+                })
+                .then(data => {
+                    // Handle the received messages here what u use them 
+                    //i mean uburyo uzishira mur html  nibwaburyo bwa dom
+                    console.log(data);
+
+                    // Assuming "data" is an array of messages, you can render them in the container
+                    const container = document.querySelector('.container');
+                    container.innerHTML = ''; // Clear the container first
+
+                    data.forEach(message => {
+                        const messageElement = document.createElement('div');
+                        messageElement.textContent = message;
+                        container.appendChild(messageElement);
+                    });
+                })
+                .catch(error => {
+                    // Handle any errors that occurred during the fetch
+                    console.error('Error:', error);
+                });
+        }
+
+        // Call the function to fetch and render the messages when the page loads
+        fetchSentMessages();
+
+    document.getElementById('contactForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        const form = event.target; // Get the form element
+        const formData = new FormData(form);
+
+        fetch('https://localhost:5000/contact', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Assuming the server returns JSON data
+            })
+            .then(data => {
+                // Handle the response data here if needed
+                console.log(data);
+
+                // Clear the form fields after successful submission
+                form.reset();
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+                console.error('Error:', error);
+            });
+    });
+</script>
+</html>

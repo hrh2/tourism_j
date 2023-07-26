@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="icon" href="Icons/Plane.png">
+    <link rel="stylesheet" href="signup.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="body">
+        <div class="pic">
+            <img src="images2/signup.jpg" alt="">
+        </div>
+        <div class="head1">
+            <img src="Icons/Plane.png" alt="">
+            <h1>Dream Discover</h1>
+        </div>
+        <div class="form">
+            <form id="signup-form"> <!-- You may change the ID of the form -->
+                <div class="upload-container">
+                    <div class="upload-preview">
+
+                    </div>
+
+                    <div class="plus">
+                        <label for="photo-upload" class="upload-label">
+                            <span>+</span>
+                            <input type="file" id="photo-upload" accept="image/*">
+                        </label>
+                    </div>
+                </div>
+                <div class="submit2">
+                    <input type="submit" value="Complete">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            const form = event.target; // Get the form element
+            const formData = new FormData(form);
+
+            fetch('https://localhost:5000/signup', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>

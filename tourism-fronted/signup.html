@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="icon" href="Icons/Plane.png">
+    <link rel="stylesheet" href="signup.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="body">
+        <div class="pic">
+            <img src="images2/signup.jpg" alt="">
+        </div>
+        <div class="head1">
+            <img src="Icons/Plane.png" alt="i">
+            <h1>Dream Discover</h1>
+        </div>
+        <div class="form">
+            <div class="head">
+                <h1>Signup</h1>
+            </div>
+            <form action="signup2.html" method="post">
+                <div>
+                    <label for="email">Email Address</label><br>
+                    <input type="text" name="email" id="email">
+                </div>
+                <div>
+                    <label for="name">Name</label><br>
+                    <input type="text" name="name" id="name">
+                </div>
+                <div>
+                    <label for="password">Password</label><br>
+                    <input type="password" name="password" id="password">
+                </div>
+                <div>
+                    <label for="passwordf">Confirm Password</label>
+                    <input type="password" name="confirmPassword" id="passwordf">
+                </div>
+
+                <div class="check">
+                    <input type="checkbox" name="termsAndConditions" id="check">
+                    <h5>Accept our terms and conditions</h5>
+                </div>
+                <div class="check">
+                    <input type="checkbox" name="verified" id="check">
+                    <h5>Send verification email to you</h5>
+                </div>
+
+                <div class="isadmin">
+                    <label for="admin">Admin</label><br>
+                    <div class="admin">
+                        <div>
+                            <input type="radio" name="isAdmin" id="admin" value="Yes" required>Yes
+                        </div>
+                        <div>
+                            <input type="radio" name="isAdmin" id="admin" value="No" required>No
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submit">
+                    <input type="submit" value="Signup">
+                </div>
+            </form>
+
+            <div class="log">
+                <p>Already have an account?<a href="login.html">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            const form = document.querySelector('form');
+            const formData = new FormData(form);
+
+            fetch('https://localhost:5000/signup', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>
