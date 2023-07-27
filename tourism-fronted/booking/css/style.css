@@ -480,3 +480,10 @@ input[type="submit"] {
 .footer a{
     color: green;
 }
+
+#showResponse{
+    color :rgb(255, 255, 255);
+    background: red;
+    font-size: larger;
+    font-weight: bolder;
+}

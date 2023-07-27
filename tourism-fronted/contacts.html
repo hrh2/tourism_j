@@ -77,6 +77,9 @@
 
         </div>
     </div>
+    <div id="showResponse">
+
+    </div>
     <div class="footer">
         <div class="foot1">
             <div class="foot">
@@ -136,47 +139,46 @@
 </body>
 <script>
     // Function to fetch all sent messages and render them in the container
-        function fetchSentMessages() {
-            fetch('https://localhost:5000/contact')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json(); //JSON data
-                })
-                .then(data => {
-                    // Handle the received messages here what u use them 
-                    //i mean uburyo uzishira mur html  nibwaburyo bwa dom
-                    console.log(data);
+    function fetchSentMessages() {
+        fetch('https://localhost:3003/contact')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // JSON data
+            })
+            .then(data => {
+                // Handle the received messages here and render them in the container
+                console.log(data);
 
-                    // Assuming "data" is an array of messages, you can render them in the container
-                    const container = document.querySelector('.container');
-                    container.innerHTML = ''; // Clear the container first
+                const container = document.querySelector('.container');
+                container.innerHTML = ''; // Clear the container first
 
-                    data.forEach(message => {
-                        const messageElement = document.createElement('div');
-                        messageElement.textContent = message;
-                        container.appendChild(messageElement);
-                    });
-                })
-                .catch(error => {
-                    // Handle any errors that occurred during the fetch
-                    console.error('Error:', error);
-                });
-        }
+                data.forEach(message => {
+                    const messageElement = document.createElement('div');
+                    messageElement.textContent = message;
+                    container.appendChild(messageElement);
+                });//u cn apply styles by dom elements and classes
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+                console.error('Error:', error);
+            });
+    }
 
-        // Call the function to fetch and render the messages when the page loads
-        fetchSentMessages();
+    // Call the function to fetch and render the messages when the page loads
+    fetchSentMessages();
 
     document.getElementById('contactForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission behavior
 
         const form = event.target; // Get the form element
         const formData = new FormData(form);
+        const jsonData = formDataToJson(formData);
 
-        fetch('https://localhost:5000/contact', {
+        fetch('https://localhost:3003/contact', {
             method: 'POST',
-            body: formData
+            body: jsonData
         })
             .then(response => {
                 if (!response.ok) {
@@ -186,15 +188,26 @@
             })
             .then(data => {
                 // Handle the response data here if needed
-                console.log(data);
+                //console.log(data);
 
                 // Clear the form fields after successful submission
+                document.getElementById('showResponse').innerText = `${JSON.stringify(data.message)}`;
                 form.reset();
             })
             .catch(error => {
                 // Handle any errors that occurred during the fetch
-                console.error('Error:', error);
+                //console.error('Error:', error);
+                document.getElementById('showResponse').innerText = `${JSON.stringify(error.message)}`;
             });
     });
+
+    // Function to convert form data to JSON
+    function formDataToJson(formData) {
+        const jsonData = {};
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
+        return JSON.stringify(jsonData);
+    }
 </script>
 </html>

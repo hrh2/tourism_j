@@ -67,7 +67,9 @@
                     <input type="submit" value="Signup">
                 </div>
             </form>
-
+            <div id="showResponse">
+            
+            </div>
             <div class="log">
                 <p>Already have an account?<a href="login.html">Login</a></p>
             </div>
@@ -75,15 +77,28 @@
     </div>
 
     <script>
+        // Convert Form Data to JSON
+        function formDataToJson(formData) {
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+            return JSON.stringify(jsonData);
+        }
+
         document.querySelector('form').addEventListener('submit', function (event) {
             event.preventDefault(); // Prevent the default form submission behavior
 
             const form = document.querySelector('form');
             const formData = new FormData(form);
+            const jsonData = formDataToJson(formData);
 
-            fetch('https://localhost:5000/signup', {
+            fetch('https://localhost:3003/signup', {
                 method: 'POST',
-                body: formData
+                body: jsonData,
+                headers: {
+                    'Content-Type': 'application/json' // Add this line to specify the content type
+                }
             })
                 .then(response => {
                     if (!response.ok) {
@@ -92,10 +107,13 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data);
+                    //console.log(data);
+                    document.getElementById('showResponse').innerText = `${JSON.stringify(data.message)}`;
+
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    //console.error('Error:', error);
+                    document.getElementById('showResponse').innerText = `${JSON.stringify(error.message)}`;
                 });
         });
     </script>

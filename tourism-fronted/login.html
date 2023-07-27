@@ -68,22 +68,15 @@
                     <a href="#">Continue with facebook</p>
                 </div>
             </div>
+            <div id="showResponse">
 
+            </div>
             <div class="log">
                 <p>Don't have an account?
-                <p>
+                </p>
                     <a href="signup.html">Register</a>
             </div>
-
-
-
-
-
         </div>
-
-
-
-
     </div>
     </div>
 
@@ -96,19 +89,29 @@
         const form = event.target; // Get the form element
         const formData = new FormData(form);
 
-        fetch('https://localhost:5000/login', {
+        // Convert the form data to JSON
+        const jsonData = formDataToJson(formData);
+
+        // Send the JSON data to the server
+        fetch('https://localhost:3003/login', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json(); // Assuming the server returns JSON data
+                return response.json(); // As the server returns JSON data
             })
             .then(data => {
                 // Handle the response data here
                 if (data.success) {
+                    // Save the token in local storage
+                    localStorage.setItem('tourism_token', data.token);
+                    document.getElementById('showResponse').innerText = `${JSON.stringify(data.message)}`;
                     // Redirect to the home page or any other page after successful login
                     window.location.href = 'home.html'; // Replace 'home.html' with the desired URL
                 } else {
@@ -117,8 +120,19 @@
             })
             .catch(error => {
                 // Handle any errors that occurred during the fetch
-                console.error('Error:', error);
+                //console.error('Error:', error);
+                document.getElementById('showResponse').innerText = `${JSON.stringify(error.message)}`;
+                
             });
     });
+
+    // Function to convert form data to JSON
+    function formDataToJson(formData) {
+        const jsonData = {};
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
+        return JSON.stringify(jsonData);
+    }
 </script>
 </html>

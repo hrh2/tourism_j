@@ -38,6 +38,9 @@
                     <input type="submit" value="Complete">
                 </div>
             </form>
+            <div id="showResponse">
+
+            </div>
         </div>
     </div>
 
@@ -48,9 +51,48 @@
             const form = event.target; // Get the form element
             const formData = new FormData(form);
 
-            fetch('https://localhost:5000/signup', {
+            // Get the selected image file and convert it to base64
+            const fileInput = document.getElementById('photo-upload');
+            if (fileInput.files.length > 0) {
+                convertToBase64(fileInput.files[0], formData);
+            } else {
+                // If no image selected, simply submit the form data as JSON without the image data
+                sendJSONData(formDataToJson(formData));
+            }
+        });
+
+        // Function to convert image to base64 and add it to the formData
+        function convertToBase64(file, formData) {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                formData.append('image', reader.result.split(',')[1]); // Add the image to the formData
+                sendJSONData(formDataToJson(formData));
+            };
+            reader.onerror = () => {
+                console.error('Error converting image to base64');
+                // In case of an error, still send the form data as JSON without the image
+                sendJSONData(formDataToJson(formData));
+            };
+        }
+
+        // Function to convert form data to JSON
+        function formDataToJson(formData) {
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+            return JSON.stringify(jsonData);
+        }
+
+        // Function to send the JSON data to the server
+        function sendJSONData(jsonData) {
+            fetch('https://localhost:3003/signup', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonData
             })
                 .then(response => {
                     if (!response.ok) {
@@ -60,11 +102,13 @@
                 })
                 .then(data => {
                     console.log(data);
+                    document.getElementById('showResponse').innerText = `${JSON.stringify(data.message)}`;
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    document.getElementById('showResponse').innerText = `${JSON.stringify(error.message)}`;
                 });
-        });
+        }
     </script>
 </body>
 

@@ -9,12 +9,12 @@
     <meta charset="utf-8">
     <title>Booking</title>
     <link rel="icon" href="images/Plane.png">
-
+</head>
 <body>
     <header>
         <div class="logo">
             <div class="plane"><img src="./images/Plane-green.png"></div>
-            <h2>Dream Discover</h1>
+            <h2>Dream Discover</h2>
         </div>
         <nav>
             <a href="../homepage.html">Home</a>
@@ -30,9 +30,9 @@
         </div>
     </header>
     <div class="secure">
-        <h2>Secure your reservation</h1>
+        <h2>Secure your reservation</h2>
     </div>
-    <form>
+    <form id="booking-form">
         <div class="container">
             <div class=room>
                 <div class=head>
@@ -44,12 +44,12 @@
                 </div>
                 <div class=x>
                     <div class=name1>
-                        <label for="first_name">First name</label>
-                        <input type="text" name="first_name" id="first" required>
+                        <label for="firstName">First name</label>
+                        <input type="text" name="firstName" id="first" required>
                     </div>
                     <div class=name2>
-                        <label for="last_name">Last name</label>
-                        <input type="text" name="last_name" id="last" required>
+                        <label for="lastName">Last name</label>
+                        <input type="text" name="lastName" id="last" required>
                     </div>
                 </div>
                 <div class=y>
@@ -58,7 +58,7 @@
                         <input type="text" name="code" id="code" required placeholder="+250">
                     </div>
                     <div class=number>
-                        <input type="text" name="mobile_number" id="number" required>
+                        <input type="text" name="phoneNumber" id="number" required>
                     </div>
                 </div>
                 <div class=email>
@@ -66,7 +66,7 @@
                     <input type="text" name="email" id="email" required>
                 </div>
                 <div class=alerts>
-                    <input type="checkbox" name="checkbox" id="check">
+                    <input type="checkbox" name="checkbox" id="check" value="yes">
                     <h5>Receive text alerts about this trip</h4>
                 </div>
             </div>
@@ -78,50 +78,50 @@
             <div class=city>
                 <div class=dep>
                     <label for="city">Departure City</label>
-                    <input type="text" name="departure" id="depart" required>
+                    <input type="text" name="departureCity" id="depart" required>
                 </div>
                 <div class=arr>
                     <label for="city">Arrival City</label>
-                    <input type="text" name="arrival" id="arrive" required>
+                    <input type="text" name="arrivalCity" id="arrive" required>
                 </div>
             </div>
             <div class=dat>
                 <div class=in>
                     <label for="checkin">Checkin Date</label>
-                    <input type="text" name="checkin" id="in" required>
+                    <input type="date" name="checkInDate" id="in" required>
                 </div>
                 <div class=out>
                     <label for="checkout">Checkout Date</label>
-                    <input type="text" name="checkout" id="out" required>
+                    <input type="date" name="checkOutDate" id="out" required>
                 </div>
             </div>
             <div class=other>
                 <div class=guest>
                     <label for="gueset">Guests</label>
-                    <input type="text" name="guest" id="guest" required>
+                    <input type="text" name="numberOfPeople" id="guest" required>
                 </div>
                 <div class=activity>
                     <label for="activity">Activity</label>
-                    <input type="text" name="activity" id="activity" required>
+                    <input type="text" name="activitySelection" id="activity" required>
                 </div>
             </div>
             <div class=currentp>
                 <label for="preferences">Current preferences</label>
-                <input type="text" name="preferences" id="pref" required>
+                <input type="text" name="currentPreferences" id="pref" required>
             </div>
             <div class=special>
                 <label for="requests">Special requests</label>
-                <input type="text" name="requests" id="req" required>
+                <input type="text" name="specialRequest" id="req" required>
             </div>
             <div class=hotel>
                 <label for="hotel">Hotel reservation</label><br>
-                <input type="radio" name="hotel" id="hotel" value="Yes" required>Yes<br>
-                <input type="radio" name="hotel" id="hotel" value="No" required>No<br>
+                <input type="radio" name="hotelRoomReservation" id="hotel" value="true" required>Yes<br>
+                <input type="radio" name="hotelRoomReservation" id="hotel" value="false" required>No<br>
             </div>
             <div class=flight>
                 <label for="flight">Flight reservation</label><br>
-                <input type="radio" name="flight" id="flight" value="Yes" required>Yes<br>
-                <input type="radio" name="flight" id="flight" value="No" required>No<br>
+                <input type="radio" name="flightReservation" id="flight" value="true" required>Yes<br>
+                <input type="radio" name="flightReservation" id="flight" value="false" required>No<br>
             </div>
         </div>
 
@@ -139,19 +139,15 @@
                         Use</a>
             </h5>
 
-            <button><input type="submit" value="Complete booking"></button>
+            <button type="submit">Complete booking</button>
+            <div id="showResponse"> </div>
             <div class=a>
                 <img src="./images/lock-circle 1.png">
-                <h7>We use secure transmission and encrypted storage to protect your personal information</h6>
+                <h6>We use secure transmission and encrypted storage to protect your personal information</h6>
             </div>
         </div>
 
     </form>
-
-
-
-
-
     <div class="footer">
         <div class="foot1">
             <div class="foot">
@@ -210,6 +206,49 @@
 
     </div>
 </body>
-</head>
+<script>
+    // Convert Form Data to JSON
+    function formDataToJson(formData) {
+        const jsonData = {};
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
+        return JSON.stringify(jsonData);
+    }
+
+    document.getElementById('booking-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Collect form data
+        const form = event.target;
+        const formData = new FormData(form);
+        //change them to json data
+        const jsonData = formDataToJson(formData);
+
+        // Send the POST request to the server
+        fetch('http://localhost:3003/api/bookings', {
+            method: 'POST',
+            body: jsonData,
+            headers: {
+                'Content-Type': 'application/json' // Added this line to specify the content type 
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response data here if needed
+                //console.log(data);
+                document.getElementById('showResponse').innerText=`${JSON.stringify(data.message)}`;
+                // You can show a success message or redirect the user to another page
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error('Error:', error);
+                document.getElementById('showResponse').innerText=`${JSON.stringify(error.message)}`;
+
+            });
+    });
+    //ibidakenewe ubivanemo
+</script>
+
 
 </html>
